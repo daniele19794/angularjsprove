@@ -1,0 +1,45 @@
+<div class="modal" id="modalAddItem">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">ï¿½</button>
+					<h4 class="modal-title">Aggiungi Item</h4>
+				</div>
+				<div class="container"></div>
+				<div class="modal-body">
+
+					<div class="input-group">
+						<span class="input-group-addon">Nome</span> <input type="text"
+							class="form-control" placeholder="inserire nome"
+							data-ng-model="formAddItem.titolo">
+
+					</div>
+					<br>
+					<div class="input-group">
+						<span class="input-group-addon">Data Inizio</span> <input
+							type="text" class="form-control"
+							placeholder="inserire data inizio"
+							data-ng-model="formAddItem.dataInizio">
+
+					</div>
+
+					<br>
+					<div class="input-group">
+						<span class="input-group-addon">Data Fine</span> <input
+							type="text" class="form-control" placeholder="inserire data fine"
+							data-ng-model="formAddItem.dataFine">
+
+					</div>
+
+				</div>
+				<div class="modal-footer">
+					<a href="#" data-dismiss="modal" class="btn">Chiudi</a>
+
+					<button data-ng-click='addItem()' data-dismiss="modal"
+						class="btn btn-primary">Add Item</button>
+
+				</div>
+			</div>
+		</div>
+	</div>

@@ -1,11 +1,8 @@
 package com.journaldev.spring.controller;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.journaldev.spring.dao.ProgettoDAO;
 import com.journaldev.spring.model.Employee;
+import com.journaldev.spring.model.Item;
 import com.journaldev.spring.model.Progetto;
 
 /**
@@ -38,19 +36,21 @@ public class ProgettoController {
 
 	@RequestMapping(value = ProgettoRestURIConstants.DUMMY_EMP, method = RequestMethod.GET)
 	public @ResponseBody
-	Employee getDummyEmployee() {
+	Progetto getDummyEmployee() {
 		logger.info("Start getDummyEmployee");
 		System.out.println("asdf");
-		Employee emp = new Employee();
-		emp.setId(9999);
-		emp.setName("Dummy");
-		emp.setCreatedDate(new Date());
-		empData.put(9999, emp);
-
-		progettoDao.addProgetto(new Progetto());
+		// Employee emp = new Employee();
+		// emp.setId(9999);
+		// emp.setName("Dummy");
+		// emp.setCreatedDate(new Date());
+		// empData.put(9999, emp);
+		//
+		// progettoDao.addProgetto(new Progetto());
+		Progetto pr = new Progetto();
+		pr.setTitolo("pr1");
 
 		System.out.println("vaiiii");
-		return new Employee();
+		return pr;
 	}
 
 	@RequestMapping(value = ProgettoRestURIConstants.GET_EMP, method = RequestMethod.GET)
@@ -63,32 +63,69 @@ public class ProgettoController {
 
 	@RequestMapping(value = ProgettoRestURIConstants.GET_ALL_EMP, method = RequestMethod.GET)
 	public @ResponseBody
-	List<Employee> getAllEmployees() {
-		logger.info("Start getAllEmployees.");
-		List<Employee> emps = new ArrayList<Employee>();
-		Set<Integer> empIdKeys = empData.keySet();
-		for (Integer i : empIdKeys) {
-			emps.add(empData.get(i));
-		}
-		return emps;
+	List<Progetto> getAllProgetti() {
+		logger.info("Start getAllProgetti");
+
+		return progettoDao.getProgetti();
+
+	}
+
+	@RequestMapping(value = ProgettoRestURIConstants.GET_ALL_ITEMS, method = RequestMethod.GET)
+	public @ResponseBody
+	List<Item> getAllItems() {
+		logger.info("Start getAllItems");
+
+		return progettoDao.getItems();
+
 	}
 
 	@RequestMapping(value = ProgettoRestURIConstants.CREATE_EMP, method = RequestMethod.POST)
 	public @ResponseBody
-	Employee createEmployee(@RequestBody Employee emp) {
-		logger.info("Start createEmployee.");
-		emp.setCreatedDate(new Date());
-		empData.put(emp.getId(), emp);
-		return emp;
+	void addItem(@RequestBody Item item) {
+		logger.info("Start addItem ..");
+
+		progettoDao.addItem(item);
+	}
+
+	@RequestMapping(value = ProgettoRestURIConstants.GET_ITEMS_ID, method = RequestMethod.GET)
+	public @ResponseBody
+	List<Item> getItems(@PathVariable("id") int idProgetto) {
+		logger.info("Start getItems");
+
+		return progettoDao.getItems(new Integer(idProgetto));
+
+	}
+
+	@RequestMapping(value = ProgettoRestURIConstants.CREATE_EMP, method = RequestMethod.POST)
+	public @ResponseBody
+	void createProgetto(@RequestBody Progetto progetto) {
+		logger.info("Start createProgetto.");
+		// emp.setCreatedDate(new Date());
+		// empData.put(emp.getId(), emp);
+
+		System.out.println("Aggiungo progetto " + progetto.getTitolo());
+		// return emp;
+	}
+
+	@RequestMapping(value = ProgettoRestURIConstants.UPDATE_EMP, method = RequestMethod.POST)
+	public @ResponseBody
+	void updateProgetto(@RequestBody Progetto progetto) {
+		logger.info("Start updateProgetto.");
+		// emp.setCreatedDate(new Date());
+		// empData.put(emp.getId(), emp);
+
+		System.out.println("updateProgetto progetto " + progetto);
+		// return emp;
 	}
 
 	@RequestMapping(value = ProgettoRestURIConstants.DELETE_EMP, method = RequestMethod.PUT)
 	public @ResponseBody
-	Employee deleteEmployee(@PathVariable("id") int empId) {
-		logger.info("Start deleteEmployee.");
-		Employee emp = empData.get(empId);
-		empData.remove(empId);
-		return emp;
+	void deleteEmployee(@PathVariable("id") int empId) {
+		System.out.println("start delete");
+		logger.info("Start deleteEmployee. " + empId);
+		// Employee emp = empData.get(empId);
+		// empData.remove(empId);
+		// return emp;
 	}
 
 }
