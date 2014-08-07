@@ -1,6 +1,8 @@
 package com.journaldev.spring.dao;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
@@ -8,8 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.journaldev.spring.model.Category;
 import com.journaldev.spring.model.Item;
+import com.journaldev.spring.model.ItemGui;
 import com.journaldev.spring.model.Progetto;
+import com.journaldev.spring.model.Stock;
 
 @Service
 public class ProgettoDAOImpl implements ProgettoDAO {
@@ -59,6 +64,7 @@ public class ProgettoDAOImpl implements ProgettoDAO {
 
 	@Transactional
 	public Progetto getProgettoById(Integer id) {
+		System.out.println("getProgettoById " + id.toString());
 		Query createQuery = sessionFactory.getCurrentSession().createQuery(
 				"from Progetto p where p.id = :id");
 		createQuery.setParameter("id", id);
@@ -67,9 +73,58 @@ public class ProgettoDAOImpl implements ProgettoDAO {
 	}
 
 	@Transactional
-	public void addItem(Item item) {
-		sessionFactory.getCurrentSession().save(item);
+	public void addItem(ItemGui item) {
+		System.out.println("addItem " + item.getTitolo() + " id "
+				+ item.getIdProgetto());
+		Item i = createItem(item);
+		sessionFactory.getCurrentSession().save(i);
 
+	}
+
+	@Transactional
+	public void deleteItem(Integer itemId) {
+		System.out.println("deleteItem " + itemId + " id ");
+
+		Query createQuery = sessionFactory.getCurrentSession().createQuery(
+				"delete  Item i where i.id = :id  ");
+		createQuery.setParameter("id", itemId);
+		int result = createQuery.executeUpdate();
+
+	}
+
+	private Item createItem(ItemGui item) {
+		Item i = new Item();
+		if (item.getId() != null) {
+			i.setId(item.getId());
+		}
+		i.setTitolo(item.getTitolo());
+		i.setProgetto(getProgettoById(item.getIdProgetto()));
+
+		return i;
+	}
+
+	public void testStock() {
+		System.out.println("Hibernate many to many (Annotation)");
+
+		sessionFactory.getCurrentSession().beginTransaction();
+
+		Stock stock = new Stock();
+		stock.setStockCode("7052");
+		stock.setStockName("PADINI");
+
+		Category category1 = new Category("CONSUMER", "CONSUMER COMPANY");
+		Category category2 = new Category("INVESTMENT", "INVESTMENT COMPANY");
+
+		Set<Category> categories = new HashSet<Category>();
+		categories.add(category1);
+		categories.add(category2);
+
+		stock.setCategories(categories);
+
+		sessionFactory.getCurrentSession().save(stock);
+
+		sessionFactory.getCurrentSession().getTransaction().commit();
+		System.out.println("Done");
 	}
 
 }

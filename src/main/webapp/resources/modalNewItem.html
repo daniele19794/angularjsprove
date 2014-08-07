@@ -3,7 +3,7 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal"
-						aria-hidden="true">ï¿½</button>
+						aria-hidden="true"></button>
 					<h4 class="modal-title">Aggiungi Item</h4>
 				</div>
 				<div class="container"></div>
@@ -18,19 +18,51 @@
 					<br>
 					<div class="input-group">
 						<span class="input-group-addon">Data Inizio</span> <input
-							type="text" class="form-control"
+							type="date" class="form-control"
 							placeholder="inserire data inizio"
 							data-ng-model="formAddItem.dataInizio">
+							
+							
 
 					</div>
 
 					<br>
 					<div class="input-group">
 						<span class="input-group-addon">Data Fine</span> <input
-							type="text" class="form-control" placeholder="inserire data fine"
+							type="date" class="form-control" placeholder="inserire data fine"
 							data-ng-model="formAddItem.dataFine">
 
 					</div>
+					<br>
+					<div class="input-group">
+						<span class="input-group-addon">Data Certificazione</span> <input
+							type="date" class="form-control" placeholder="inserire data certificazione"
+							data-ng-model="formAddItem.dataCertificazione">
+
+					</div>
+					<br>
+					<div class="input-group">
+						<span class="input-group-addon">Data Produzione</span> <input
+							type="date" class="form-control" placeholder="inserire data produzione"
+							data-ng-model="formAddItem.dataProduzione">
+
+					</div>
+					<br>
+					<div class="input-group">
+						<span class="input-group-addon">Effort Previsto</span> <input type="text"
+							class="form-control" placeholder="effort previsto"
+							data-ng-model="formAddItem.effortPrevisto">
+
+					</div>
+					<br>
+					<div class="input-group">
+						<span class="input-group-addon">Effort Effettivo</span> <input type="text"
+							class="form-control" placeholder="effort effettivo"
+							data-ng-model="formAddItem.effortEffettivo">
+
+					</div>
+					<br>
+					
 
 				</div>
 				<div class="modal-footer">

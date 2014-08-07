@@ -1,6 +1,8 @@
 package com.journaldev.spring.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.journaldev.spring.dao.ProgettoDAO;
 import com.journaldev.spring.model.Employee;
 import com.journaldev.spring.model.Item;
+import com.journaldev.spring.model.ItemConverter;
+import com.journaldev.spring.model.ItemGui;
 import com.journaldev.spring.model.Progetto;
 
 /**
@@ -72,39 +76,46 @@ public class ProgettoController {
 
 	@RequestMapping(value = ProgettoRestURIConstants.GET_ALL_ITEMS, method = RequestMethod.GET)
 	public @ResponseBody
-	List<Item> getAllItems() {
+	List<ItemGui> getAllItems() {
 		logger.info("Start getAllItems");
 
-		return progettoDao.getItems();
+		return convert(progettoDao.getItems());
 
 	}
 
-	@RequestMapping(value = ProgettoRestURIConstants.CREATE_EMP, method = RequestMethod.POST)
-	public @ResponseBody
-	void addItem(@RequestBody Item item) {
-		logger.info("Start addItem ..");
+	private List<ItemGui> convert(List<Item> items) {
+		ArrayList<ItemGui> i = new ArrayList<ItemGui>();
+		for (Iterator iterator = items.iterator(); iterator.hasNext();) {
+			Item item = (Item) iterator.next();
+			i.add(ItemConverter.toItemGui(item));
+		}
+		return i;
+	}
 
+	@RequestMapping(value = ProgettoRestURIConstants.ADD_ITEM, method = RequestMethod.POST)
+	public @ResponseBody
+	void addItem(@RequestBody ItemGui item) {
+		System.out.println("add item " + item.getTitolo() + " idProgetto "
+				+ item.getIdProgetto());
 		progettoDao.addItem(item);
 	}
 
 	@RequestMapping(value = ProgettoRestURIConstants.GET_ITEMS_ID, method = RequestMethod.GET)
 	public @ResponseBody
-	List<Item> getItems(@PathVariable("id") int idProgetto) {
-		logger.info("Start getItems");
+	List<ItemGui> getItems(@PathVariable("id") int idProgetto) {
+		logger.info("Start getItems " + idProgetto);
 
-		return progettoDao.getItems(new Integer(idProgetto));
-
+		return convert(progettoDao.getItems(new Integer(idProgetto)));
 	}
 
-	@RequestMapping(value = ProgettoRestURIConstants.CREATE_EMP, method = RequestMethod.POST)
+	@RequestMapping(value = ProgettoRestURIConstants.ADD_PROGETTO, method = RequestMethod.POST)
 	public @ResponseBody
 	void createProgetto(@RequestBody Progetto progetto) {
-		logger.info("Start createProgetto.");
-		// emp.setCreatedDate(new Date());
-		// empData.put(emp.getId(), emp);
+		logger.info("Start add Progetto");
 
 		System.out.println("Aggiungo progetto " + progetto.getTitolo());
-		// return emp;
+		progettoDao.addProgetto(progetto);
+
 	}
 
 	@RequestMapping(value = ProgettoRestURIConstants.UPDATE_EMP, method = RequestMethod.POST)
@@ -121,11 +132,11 @@ public class ProgettoController {
 	@RequestMapping(value = ProgettoRestURIConstants.DELETE_EMP, method = RequestMethod.PUT)
 	public @ResponseBody
 	void deleteEmployee(@PathVariable("id") int empId) {
-		System.out.println("start delete");
+		System.out.println("start delete items");
 		logger.info("Start deleteEmployee. " + empId);
+		progettoDao.deleteItem(new Integer(empId));
 		// Employee emp = empData.get(empId);
 		// empData.remove(empId);
 		// return emp;
 	}
-
 }

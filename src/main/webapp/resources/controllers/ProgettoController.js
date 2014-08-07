@@ -1,287 +1,269 @@
-var demoApp = angular
-				.module('demoApp', [ 'customFilters' ])
-				.controller(
-						'personController',
+var showcase = angular
+		.module('demoApp', [ 'customFilters', 'ProgettoFactory' ])
+		.controller(
+				'personController',
 
-						function($scope, $http, ProgettiService,ProgettiFactory) {
+				function($scope, $http, $location, ProgettiFactory) {
 
-							$scope.showAlert = false;
-							$scope.alertMessage = '';
+					$scope.showAlert = false;
+					$scope.alertMessage = '';
+					$scope.infoMessage = '';
 
-							$scope.formAddProgetto = {};
-							$scope.formAddProgetto.titolo = "";
+					$scope.showInfoMessage = function(info) {
+						$scope.infoMessage = info;
+						$scope.showInfo = true;
+					}
 
-							$scope.formAddItem = {};
-							$scope.formAddItem.titolo = "";
-							$scope.formAddItem.progetto = "";
+					$scope.hideMessage = function(info) {
+						$scope.showInfo = false;
+						$scope.showAlert = false;
+					}
 
-							//Gestione Paginazione
+					$scope.formAddProgetto = {};
+					$scope.formAddProgetto.titolo = "";
 
-							$scope.selectedPage = 1;
-							$scope.pageSize = 2;
-							$scope.selectPage = function(newPage) {
-								$scope.selectedPage = newPage;
-							}
+					$scope.formAddItem = {};
+					$scope.formAddItem.titolo = "";
+					$scope.formAddItem.progetto = "";
 
-							$scope.getPageClass = function(page) {
-								return $scope.selectedPage == page ? 'btn-primary'
-										: '';
-							}
+					// Gestione Paginazione
 
-							$scope.showError = function() {
-								console.log('showerror');
-							}
+					$scope.selectedPage = 1;
+					$scope.pageSize = 2;
+					$scope.selectPage = function(newPage) {
+						$scope.selectedPage = newPage;
+					}
 
-							$scope.deleteProgetto = function(row) {
-								console.info(row);
-								$scope.progetti.splice(row, 1);
-							}
+					$scope.getPageClass = function(page) {
+						return $scope.selectedPage == page ? 'btn-primary' : '';
+					}
 
-							$scope.currentProgetto = function(row) {
-								console.info('provaaaa' + row);
-								$scope.formAddItem.progetto = row;
-							}
+					$scope.showError = function() {
+						console.log('showerror');
+					}
 
-							$scope.addProgetto = function() {
-								$scope.progetti.push({
-									titolo : $scope.formAddProgetto.titolo,
-									dataInizio : '10/10/2012',
-									dataFine : '10/10/2012',
-								//items:{item:{titolo:'item1'},item:{titolo:'item1'}}
-								});
-								console.info($scope.formAddProgetto.titolo);
-							};
+					$scope.deleteProgetto = function(row) {
+						console.info(row);
+						$scope.progetti.splice(row, 1);
+					}
 
-							$scope.deleteItem = function(rowIndex, i) {
-								console.info('prova' + i + 'sdaf ' + rowIndex);
-								$scope.progetti[rowIndex].items.splice(
-										$scope.progetti[rowIndex].items
-												.indexOf(i), 1);
+					$scope.currentProgetto = function() {
+						// console.info('provaaaa' + row);
+						// $scope.formAddItem.progetto = row;
+					}
 
-								// aggiungere aggiornamento db
+					$scope.addProgetto = function(titolo) {
+						var progetto = {
+							"titolo" : $scope.formAddProgetto.titolo
+						};
 
-							};
+						ProgettiFactory
+								.addProgetto(progetto)
+								.success(
+										function(pr) {
+											$scope
+													.showInfoMessage('Progetto Aggiunto  correttamente');
 
-
-
-							$scope.getProgetti = function() {
-								console.log('getProgetti');
-								//$scope.pro = ProgettiService.getAllProgetti();
-								// $http
-								//		.get(
-								//				'http://localhost:8080/angularjsprove/rest/emps').success(function(data) {
-								//			        $scope.progetti = data;
-								//
-
-							};
-
-
-
-							$scope.getItems = function(progetto) {
-								console.log('getItems ' + progetto);
-								console.log('progetto sel ' + progetto);
-
-                                ProgettiFactory.getItems(progetto).success(function (it) {
-                                    console.log('getItems success ' + angular.toJson(it));
-                                    $scope.showAlert=true;;
-                                    $scope.alertMessage='Item caricati correttamente';
-                                    $scope.itemsStaticidb = it;
-                                    console.log('getItems to json ' + $scope.itemsStaticidb);
-                                })
-                                    .error(function (error) {
-                                        console.log('getItems error');
-                                        $scope.status = 'Unable to load customer data: ' + error.message;
-                                        $scope.showAlert=true;;
-                                        $scope.alertMessage='Errore caricamento Item ' + error.message;
-                                    });
-
-
-
-							};
-
-							$scope.showTableItems = function() {
-
-								if (angular.isUndefined($scope.itemsStatici)
-										|| $scope.itemsStatici.length == 0) {
-									return false;
-								} else {
-									return true;
-								}
-
-							};
-
-
-
-                            $scope.progettiStatici = {};
-
-
-
-                            $scope.getAllProgetti = function(){
-
-                                ProgettiFactory.getProgetti().success(function (pr) {
-                                    console.log('getProgetti success ' + angular.toJson(pr));
-                                    $scope.showAlert=true;;
-                                    $scope.alertMessage='Progetti caricati correttamente';
-                                    $scope.progettiStatici = pr;
-                                })
-                                    .error(function (error) {
-                                        console.log('getProgetti error');
-                                        $scope.status = 'Unable to load customer data: ' + error.message;
-                                        $scope.showAlert=true;;
-                                        $scope.alertMessage='Errore caricamento Progetti ' + error.message;
-                                    });
-
-
-
-
-                            }
-
-                            $scope.getAllProgetti();
-
-							console.log('progetti --> ' + $scope.progetti);
-
-							console.log('progetti ' + $scope.progetti);
-
-							$scope.selectedProgetto = null;
-
-							$scope.selectProgetto = function(progetto) {
-								console.log('showerror ' + progetto.titolo + ' progetto id ' + progetto.id );
-								$scope.selectedProgetto = progetto;
-								$scope.getItems(progetto.id);
-								$scope.currentProgetto=progetto.id;
-							}
-
-							$scope.addProgettoPost = function() {
-								console.log('addProgettoPost');
-								ProgettiService.addProgetto($scope.progetto);
-
-							};
-
-							$scope.getProgettoClass = function(progetto) {
-								console
-										.log('class ' + $scope.selectedProgetto == progetto ? 'btn-primary'
-												: "");
-								return $scope.selectedProgetto == progetto ? 'btn-primary'
-										: "";
-							}
-
-							$scope.deleteProgetto = function() {
-								console.log('deleteProgetto');
-								ProgettiService.deleteProgetto('2');
-
-							};
-
-							$scope.addItem = function() {
-
-								ProgettiFactory.addItem($scope.formAddItem.titolo,$scope.currentProgetto);
-
-							}
-
-						}).factory('ProgettiFactory',['$http',function($http){
-
-        var progettiFactory=[];
-
-        return {
-            addProgetto: function (titolo){
-                console.log('addProgetto in Factory');
-            },
-            removeProgetto: function (titolo){
-                console.log('removeProgetto in Factory');
-            },
-            getProgetti: function(){
-                console.log('getProgetti in Factory');
-                return $http
-                    .get(
-                    'http://localhost:8085/angularjsprove/rest/emps');
-            },
-
-            getItems: function(idProgetto){
-                console.log('getItems in Factory');
-                return $http
-                    .get(
-                    'http://localhost:8085/angularjsprove/rest/items/'+ idProgetto);
-            },
-            
-            addItem: function(titolo,idProgetto){
-            	console.log('addItems in Factory ' +  titolo + ' ' + idProgetto);
-            	 return $http
-                 .post(
-                 'http://localhost:8085/angularjsprove/rest/item/add/'+ idProgetto);
-            	
-            }
-        }
-
-
-    }]);
-
-		demoApp
-				.run(function($rootScope, $http, ProgettiService) {
-					console
-							.log('demo app run, qui va fatta la prima chiamata per caricare di dati lato server');
-					//$rootScope.progetti = ProgettiService.getAllProgetti();
-					$rootScope.progettiOLD = $http.get("resources/data.json")
-							.success(
-									function(data) {
-										console.log('data --> '
-												+ angular.toJson(data));
-										angular.forEach(data, function(d) {
-											console.log(d.titolo);
+											$scope.getAllProgetti();
+										})
+								.error(
+										function(error) {
+											console.log('Progetto add error');
+											$scope
+													.showInfoMessage('Errore creazione progetto ');
 										});
-									});
+
+					};
+
+					$scope.deleteItem = function(item) {
+						console.info('delete item' + item.titolo);
+						ProgettiFactory
+								.deleteItem(item)
+								.success(
+										function(pr) {
+											// console.log('delete success ' +
+											// angular.toJson(pr));
+											$scope
+													.showInfoMessage('Item cancellata correttamente');
+
+											// $scope.progettiStatici = pr;
+
+											$scope
+													.getItems($scope.selectedProgetto.id);
+										})
+								.error(
+										function(error) {
+											console.log('delete item error');
+											$scope
+													.showInfoMessage('Item non cancellata correttamente');
+										});
+
+					};
+
+					$scope.getItems = function(progetto) {
+
+						console.log('progettto ' + progetto);
+						ProgettiFactory
+								.getItems(progetto)
+								.success(
+										function(it) {
+											$scope
+													.showInfoMessage('Item caricati correttamente');
+
+											$scope.itemsStaticidb = it;
+										})
+								.error(
+										function(error) {
+											$scope.status = 'Unable to load customer data: '
+													+ error.message;
+											$scope.showAlert = true;
+											;
+											$scope.alertMessage = 'Errore caricamento Item '
+													+ error.message;
+										});
+
+					};
+
+					$scope.showTableItems = function() {
+
+						if (angular.isUndefined($scope.itemsStatici)
+								|| $scope.itemsStatici.length == 0) {
+							return false;
+						} else {
+							return true;
+						}
+
+					};
+					$scope.progettiStatici = {};
+					$scope.getAllProgetti = function() {
+
+						ProgettiFactory
+								.getProgetti()
+								.success(
+										function(pr) {
+											$scope
+													.showInfoMessage('Progetti caricati correttamente');
+											$scope.progettiStatici = pr;
+
+											$scope.selectedProgetto = pr[0];
+											$scope
+													.getItems($scope.selectedProgetto.id);
+										})
+								.error(
+										function(error) {
+											console.log('getProgetti error');
+											$scope.status = 'Unable to load customer data: '
+													+ error.message;
+											$scope.showAlert = true;
+											;
+											$scope.alertMessage = 'Errore caricamento Progetti '
+													+ error.message;
+										});
+
+					}
+					$scope.getAllProgetti();
+
+					$scope.selectedProgetto = null;
+
+					$scope.selectProgetto = function(progetto) {
+						console.log('progetto ' + progetto.id);
+						$scope.selectedProgetto = progetto;
+						$scope.getItems(progetto.id);
+					}
+
+					$scope.addProgettoPost = function() {
+						console.log('addProgettoPost');
+						ProgettiService.addProgetto($scope.progetto);
+
+					};
+
+					$scope.getProgettoClass = function(progetto) {
+
+						return $scope.selectedProgetto == progetto ? 'btn-primary'
+								: "";
+					}
+
+					$scope.isActive = function(viewLocation) {
+						var active = (viewLocation === $location.path());
+						return active;
+					};
+
+					$scope.deleteProgetto = function() {
+						console.log('deleteProgetto');
+						ProgettiService.deleteProgetto('2')
+
+					};
+
+					$scope.clearFormItemsFields = function() {
+						$scope.formAddItem.titolo = "";
+						$scope.formAddItem.progetto = "";
+
+					}
+
+					$scope.addItem = function() {
+
+						ProgettiFactory
+								.addItem($scope.formAddItem.titolo,
+										$scope.selectedProgetto)
+								.success(
+										function(data) {
+											console.log('alee '
+													+ $scope.selectedProgetto);
+											$scope
+													.getItems($scope.selectedProgetto.id);
+											$scope
+													.showInfoMessage('Item Aggiunta Correttamente');
+											$scope.clearFormItemsFields();
+										})
+								.error(
+										function(error) {
+											$scope
+													.showInfoMessage('Errore Aggiunta Correttamente');
+											console.log('nooo');
+										});
+
+					}
+
+					$scope.sayHello = function() {
+						console.log('ciaooo');
+					}
+
+					$scope.today = function() {
+						$scope.dt = new Date();
+					};
+					$scope.today();
+
+					$scope.clear = function() {
+						$scope.dt = null;
+					};
+
+					// Disable weekend selection
+					$scope.disabled = function(date, mode) {
+						return (mode === 'day' && (date.getDay() === 0 || date
+								.getDay() === 6));
+					};
+
+					$scope.toggleMin = function() {
+						$scope.minDate = $scope.minDate ? null : new Date();
+					};
+					$scope.toggleMin();
+
+					$scope.open = function($event) {
+						console.log('open event');
+						$event.preventDefault();
+						$event.stopPropagation();
+
+						$scope.opened = true;
+					};
+
+					$scope.dateOptions = {
+						formatYear : 'yy',
+						startingDay : 1
+					};
+
+					$scope.initDate = new Date('2016-15-20');
+					$scope.formats = [ 'dd-MMMM-yyyy', 'yyyy/MM/dd',
+							'dd.MM.yyyy', 'shortDate' ];
+					$scope.format = $scope.formats[0];
 
 				});
-
-
-
-
-		demoApp
-				.service(
-						'ProgettiService',
-						function($http) {
-							this.getAllProgetti = function() {
-								console.log('Get all progetti ');
-
-								//$scope.pro = ProgettiService.getAllProgetti();
-								return $http
-										.get(
-												'http://localhost:8080/angularjsprove/rest/emps')
-										.success(function(data) {
-											return data;
-										});
-
-							};
-
-							this.updateProgetto = function(progetto) {
-								console.log('update ' + progetto);
-
-							}
-
-							this.addProgetto = function(progetto) {
-								console.log('addProgetto ' + progetto.titolo);
-
-								$http
-										.post(
-												"http://localhost:8080/angularjsprove/rest/emp/create",
-												progetto).success(function() {
-											console.log('add proegettooooo');
-											//$location.path("/menu");
-										});
-
-							};
-
-							this.deleteProgetto = function(id) {
-								console.log('deleteProgetto ' + id);
-
-								$http
-										.put(
-												"http://localhost:8080/angularjsprove/rest/emp/delete/" + 2)
-										.success(
-												function() {
-													console
-															.log('delete proegettooooo');
-													//$location.path("/menu");
-												});
-
-							};
-
-						});

@@ -1,0 +1,47 @@
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th><a href="" ng-click="predicate = 'titolo'; reverse=!reverse">Titolo</a></th>
+			<th><a href=""
+				ng-click="predicate = 'dataInizio'; reverse=!reverse">Data
+					Inizio</a></th>
+			<th><a href=""
+				ng-click="predicate = 'dataFine'; reverse=!reverse">Data Fine</a></th>
+			<th><a href=""
+				ng-click="predicate = 'dataFine'; reverse=!reverse">Data
+					Certificazione</a></th>
+
+			<th><a href=""
+				ng-click="predicate = 'dataFine'; reverse=!reverse">Data
+					Produzione</a></th>
+			<th><a href=""
+				ng-click="predicate = 'dataFine'; reverse=!reverse">Effort
+					Previsto</a></th>
+			<th><a href=""
+				ng-click="predicate = 'dataFine'; reverse=!reverse">Effort
+					Effettivo</a></th>
+
+			<th></th>
+		</tr>
+
+	</thead>
+
+	</thead>
+	<tr data-ng-repeat="i in itemsStaticidb  | orderBy:predicate:reverse">
+		<td>{{i.titolo}}</td>
+		<td>{{i.dataInizio}}</td>
+		<td>{{i.dataFine}}</td>
+		<td>{{i.dataCertificazione}}</td>
+		<td>{{i.dataProduzione}}</td>
+		<td>{{i.effortPrevisto}}</td>
+		<td>{{i.effortEffettivo}}</td>
+
+
+
+		<td>
+			<button data-ng-click='deleteItem(i)' class="btn btn-danger">Delete
+			</button>
+		</td>
+
+	</tr>
+</table>

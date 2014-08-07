@@ -1,38 +1,47 @@
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th><a href="" ng-click="predicate = 'titolo'; reverse=!reverse">Titolo</a></th>
+			<th><a href=""
+				ng-click="predicate = 'dataInizio'; reverse=!reverse">Data
+					Inizio</a></th>
+			<th><a href=""
+				ng-click="predicate = 'dataFine'; reverse=!reverse">Data Fine</a></th>
+			<th><a href=""
+				ng-click="predicate = 'dataFine'; reverse=!reverse">Data
+					Certificazione</a></th>
 
-<div class='panel panel-default row' ng-controller="personController">
-	
-<!-- 	<div data-ng-repeat="row in itemsStatici.item"> -->
-	
-		<b>{{row.titolo}} </b><br />
-		<button data-ng-click='deleteProgetto(row)' class="btn btn-danger">Delete
-		</button>	
+			<th><a href=""
+				ng-click="predicate = 'dataFine'; reverse=!reverse">Data
+					Produzione</a></th>
+			<th><a href=""
+				ng-click="predicate = 'dataFine'; reverse=!reverse">Effort
+					Previsto</a></th>
+			<th><a href=""
+				ng-click="predicate = 'dataFine'; reverse=!reverse">Effort
+					Effettivo</a></th>
 
-		<table class="table table-striped" ng-show="showTableItems()">
-			<thead>
-				<tr>
-					<th><a href=""
-						ng-click="predicate = 'titolo'; reverse=!reverse">Titolo</a></th>
-					<th>Data Inizio</th>
-					<th>Data Fine</th>
-					<th></th>
-				</tr>
-			</thead>
-			<tr data-ng-repeat="i in itemsStatici.item">
-				<td>{{i.titolo}}</td>
-				<td>{{i.dataInizio}}</td>
-				<td>{{i.dataFine}}</td>
-				<td><button class="btn btn-danger btn-mini"
-						data-ng-click="deleteItem($parent.$index,i)">
-						<i class="icon-trash icon-white">delete</i>
-					</button></td>
+			<th></th>
+		</tr>
 
-			</tr>
+	</thead>
 
-		</table>
+	</thead>
+	<tr data-ng-repeat="i in itemsStaticidb  | orderBy:predicate:reverse">
+		<td>{{i.titolo}}</td>
+		<td>{{i.dataInizio}}</td>
+		<td>{{i.dataFine}}</td>
+		<td>{{i.dataCertificazione}}</td>
+		<td>{{i.dataProduzione}}</td>
+		<td>{{i.effortPrevisto}}</td>
+		<td>{{i.effortEffettivo}}</td>
 
-		<a data-toggle="modal" href="#modalAddItem"
-			data-ng-click="currentProgetto(row)" class="btn btn-primary">Aggiungi
-			Item</a> <br> <br> <br>
-	</div>
 
-</div>
+
+		<td>
+			<button data-ng-click='deleteItem(i)' class="btn btn-danger">Delete
+			</button>
+		</td>
+
+	</tr>
+</table>

@@ -8,6 +8,7 @@
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 
 	<annotation-driven />
+	<resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/"></resources>
 
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving 
 		up static resources in the ${webappRoot}/resources directory -->

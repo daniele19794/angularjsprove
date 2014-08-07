@@ -1,0 +1,31 @@
+
+	<div class="modal" id="myModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true"></button>
+					<h4 class="modal-title">Aggiungi Progetto</h4>
+				</div>
+				<div class="container"></div>
+				<div class="modal-body">
+
+					<div class="input-group">
+						<span class="input-group-addon">Nome</span> <input type="text"
+							class="form-control" placeholder="inserire nome"
+							data-ng-model="formAddProgetto.titolo">
+					</div>
+
+				</div>
+				<div class="modal-footer">
+					<a href="#" data-dismiss="modal" class="btn">Chiudi</a>
+
+					<button data-ng-click='addProgetto()' data-dismiss="modal"
+						class="btn btn-primary">Add Progetto</button>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+	
